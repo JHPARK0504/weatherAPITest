@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 module.exports = Connect
-function Connect(Mongo_DB_URL){
+function Connect(MONGODB_URL){
     mongoose.Promise = global.Promise
     var mongooseOption = {
         useNewUrlParser: true, 
@@ -9,7 +9,7 @@ function Connect(Mongo_DB_URL){
         maxPoolSize: 10000
     }
     return new Promise((resolve,reject)=>{
-        mongoose.connect(Mongo_DB_URL,mongooseOption).then((r)=>true).catch((Err)=>console.log(Err))
+        mongoose.connect(MONGODB_URL,mongooseOption).then((r)=>true).catch((Err)=>console.log(Err))
         mongoose.connection.once("open", ()=>{
             console.log("MongoDB 연결 성공")
             return resolve(true)
