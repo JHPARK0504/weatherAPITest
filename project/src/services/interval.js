@@ -7,14 +7,19 @@ const Limit_Days = 3 // 제한 일
 Interval("VeryShortlive_Status_inquiry","Seoul","https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst",60,"06")
 Interval("VeryShortlive_Status_inquiry","Gyeonggi","https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst",60,"06")
 Interval("VeryShortlive_Status_inquiry","Jeju","https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst",60,"06")
+Interval("VeryShortlive_Status_inquiry","Junra","https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst",60,"06") 
+
 // 초단기예보조회
 Interval("Ultra_shortterm_forecast_inquiry","Seoul","https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst",30,null)
 Interval("Ultra_shortterm_forecast_inquiry","Gyeonggi","https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst",30,null)
 Interval("Ultra_shortterm_forecast_inquiry","Jeju","https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst",30,null)
+Interval("Ultra_shortterm_forecast_inquiry","Junra","https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst",30,null)
 // 단기예보조회
 Interval("Short_term_forecast_inquiry","Seoul","https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst",60,"05")
 Interval("Short_term_forecast_inquiry","Gyeonggi","https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst",60,"05")
 Interval("Short_term_forecast_inquiry","Jeju","https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst",60,"05")
+Interval("Short_term_forecast_inquiry","Junra","https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst",60,"05")
+
 
 
 function Interval(MainName,Address,BaseURL,Minute,ForceHourTime){
@@ -25,7 +30,10 @@ function Interval(MainName,Address,BaseURL,Minute,ForceHourTime){
         let i = 0;
         while(moment.duration(moment().diff(moment().add(Limit_Days * -1,"days").add(Minute * (i+1),'minutes'))).asDays()>=0){
             // 현재시간을 넘으면 멈추고 Minute 만큼 기다렸다가 재시작
+            // 현재시간에서 Limit_Days로 이동하고
+            // Minute * i 더하면 몇분전인지 알 수 있다.
             const P_Date = moment().add(Limit_Days * -1,"days").add(Minute * i,'minutes')
+
             if(ForceHourTime && ForceHourTime == P_Date.format('HH')){
                 const Response = await Request(BaseURL , process.env.ServiceKey , 1 , 10000 , "JSON" , P_Date.format('YYYYMMDD'), ForceHourTime+'00' , Address_Item[Address].nx , Address_Item[Address].ny)
                 .then((r)=>r).catch((err)=>false)

@@ -10,17 +10,25 @@ require('dotenv').config();
 const Address_Item = {
     // nx : 예보지점 x좌표 , ny : 예보지점 y 좌표
     Seoul:{
-        nx:37,
-        ny:127,
+        nx:37, //위도
+        ny:127, // 경도
     },
     Gyeonggi:{
-        nx:36,
-        ny:127
+        nx:36,  //위도
+        ny:127, //경도
     },
     Jeju:{
-        nx:126,
-        ny:33
+        nx:33, 
+        ny:126,
     },
+
+    // error : 지역추가 데이터 출력 안됨
+    //지역 추가시 ( 위도와 경도를 알아야 한다는 단점이 있다. )    
+    Junra:{
+        nx:126,
+        ny:34
+    },
+
 };
 
 app.get("/api/DB", async (req, res) => {
@@ -28,7 +36,7 @@ app.get("/api/DB", async (req, res) => {
         const data = await Model.find({
             MainName: req.query.MainName,
             Address: req.query.Address
-        }).select({ _id: 0, __v: 0 }).lean();
+        }).select({ _id: 0, __v: 0 }).lean(); //MongoDB에서 자동으로 생성되는 기본 필드를 제거 -> 데이터 크기를 줄여서 처리 성능 향상
 
         if (data && Array.isArray(data)) {
             const formattedData = data.map(Items => {
@@ -92,7 +100,7 @@ app.get("/api/lowAndHighTemperature", async (req, res) => {
         }
 
         const data = await Model.find({
-            MainName: "Ultra_shortterm_forecast_inquiry", // 필요한 데이터가 초단기실황 데이터에서 나온다고 가정합니다.
+            MainName: "Ultra_shortterm_forecast_inquiry",
             Address: address,
             category: "T1H" // 기온 데이터만 추출
         }).select({ _id: 0, __v: 0 }).lean();
